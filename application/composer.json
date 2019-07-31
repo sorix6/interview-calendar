@@ -1,0 +1,27 @@
+{
+    "name": "sdumitrescu/interview-calendar",
+    "description": "Interview calendar API",
+    "version": "0.0.1-dev",
+    "authors": [
+        {
+            "name": "Sorina Dumitrescu"
+        }
+    ],
+    "require": {
+        "slim/slim": "^3.12",
+        "illuminate/database": "~5.1",
+        "ramsey/uuid": "^3.8"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "InterviewCalendar\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": { "InterviewCalendar\\Tests\\": "tests/" }
+    }
+    
+}

@@ -1,0 +1,29 @@
+version: "3.7"
+
+services:
+  api:
+    build: .
+      #context: ./docker-config/api      
+    volumes:
+      - ./application:/var/www/html
+    ports:
+      - 80:80
+
+  db:
+    image: postgres:latest
+    container_name: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: admin
+      POSTGRES_DB: interview_calendar
+    volumes:
+      - ./docker-config/postgres/init.sql:/docker-entrypoint-initdb.d/10-init.sql
+    ports:
+      - 5432:5432
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
