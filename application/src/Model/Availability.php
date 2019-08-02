@@ -9,27 +9,25 @@ use InterviewCalendar\ValueObject\Interval;
 
 use Ramsey\Uuid\Uuid;
 
-class Availability 
+class Availability implements \JsonSerializable
 {
-    private $account;
     private $date;
-    private $interval;
+    private $intervals;
 
-    public function __construct(AccountInterface $account, DateInFuture $date, Interval $interval)
+    public function __construct(DateInFuture $date, array $intervals = array())
     {
-        $this->account = $account;
         $this->date = $date;
-        $this->interval = $interval;
+        $this->intervals = $intervals;
     }
-}
-    public function accountUuid(): Uuid
+
+    public function addInterval(Interval $interval)
     {
-        return $this->account->uuid();
+        array_push($this->intervals, $interval);
     }
 
     public function date(): string
     {
-        return $this->date->value();
+        return (string) $this->date;
     }
 
     public function intervalStart(): int
@@ -40,6 +38,30 @@ class Availability
     public function intervalEnd(): int
     {
         return $this->interval->end();
+    }
+
+    public function range(): array
+    {
+        $range = [];
+        foreach($this->intervals as $interval)
+        {
+            $range = array_merge($range, $interval->range());
+        }
+
+        return [ 'date' => (string) $this->date, 'range' => $range ];
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'date' => (string) $this->date, 
+            'intervals' => $this->intervals
+        ];
+    }
+
+    public function jsonSerialize(): array
+    {
+        return $this->toArray();
     }
 
 }

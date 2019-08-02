@@ -4,7 +4,7 @@ namespace InterviewCalendar\ValueObject;
 
 use InterviewCalendar\ValueObject\Exception;
 
-class Interval 
+class Interval implements \JsonSerializable
 {
     private $start;
     private $end;
@@ -43,16 +43,23 @@ class Interval
         return $this->end;
     }
 
+    public function intersect(Interval $interval): array
+    {
+        return array_intersect($this->range(), $interval->range());
+    }
+
     public function range(): array
     {
-        $range = array();
-        $counter = $this->start;
-        while ($counter <= $this->end){
-            array_push($range, $counter);
+        return range($this->start, $this->end - 1, $this->step);
+    }
 
-            $counter += $this->step;
-        }
+    public function __toString(): string 
+    {
+        return '[' . $this->start() . ',' . $this->end() . ')';
+    }
 
-        return $range
+    public function jsonSerialize(): string
+    {
+        return $this->start() . ' - ' . $this->end();
     }
 }

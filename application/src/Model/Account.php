@@ -4,17 +4,18 @@ namespace InterviewCalendar\Model;
 
 use InterviewCalendar\Model\AccountInterface;
 use InterviewCalendar\ValueObject\EmailAddress;
+use InterviewCalendar\ValueObject\Uuid;
 
-
-use Ramsey\Uuid\Uuid;
 
 class Account implements AccountInterface, \JsonSerializable
 {
 
-    private $uuid;
-    private $lastname;
-    private $firstname;
-    private $email;
+    protected $uuid;
+    protected $lastname;
+    protected $firstname;
+    protected $email;
+
+    protected $availabilities = array();
 
     public function __construct(Uuid $uuid, string $firstname, string $lastname, EmailAddress $email)
     {
@@ -22,6 +23,21 @@ class Account implements AccountInterface, \JsonSerializable
         $this->firstname = $firstname;
         $this->lastname = $lastname;
         $this->email = $email;
+    }
+
+    public function addAvailability(Availability $availability)
+    {
+        array_push($this->availabilities, $availability);
+    }
+
+    public function getAvailabilities(): array
+    {
+        return $this->availabilities;
+    }
+
+    public function setAvailabilities(array $availabilities)
+    {
+        $this->availabilities = $availabilities;
     }
 
     public function uuid(): Uuid
@@ -46,11 +62,17 @@ class Account implements AccountInterface, \JsonSerializable
 
     public function jsonSerialize(): array
     {
-        return array(
+        return [
             'uuid'      => (string) $this->uuid,
             'fullname'  => $this->firstname . ' ' . $this->lastname,
-            'email'     => (string) $this->email
-        );
+            'email'     => (string) $this->email,
+            'availability' => $this->availabilities
+        ];
+    }
+
+    public function __toString(): string 
+    {
+        return (string) $this->uuid;
     }
 
 }

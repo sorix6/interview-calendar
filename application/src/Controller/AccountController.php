@@ -5,12 +5,16 @@ namespace InterviewCalendar\Controller;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Slim\App;
-use Ramsey\Uuid\Uuid;
 
 
-use InterviewCalendar\Database\Query;
+
+use InterviewCalendar\Database\Repository;
+use InterviewCalendar\ValueObject\Uuid;
+use InterviewCalendar\ValueObject\EmailAddress;
 use InterviewCalendar\ValueObject\Exception\InvalidUuid;
 use InterviewCalendar\ValueObject\Exception\InvalidUserInput;
+use InterviewCalendar\Model\CandidateAccount;
+use InterviewCalendar\Model\InterviewerAccount;
 
 class AccountController
 {
@@ -18,13 +22,13 @@ class AccountController
     private $intervalStep;
 
     public function __construct($db, int $intervalStep){
-        $this->query = new Query($db);
+        $this->query = new Repository($db);
         $this->intervalStep = $intervalStep;
     }
 
     public function get(Request $request, Response $response, array $args)
     {
-        $account = $this->query->getAccount($args['account_uuid']);
+        $account = $this->query->getAccount(new Uuid($args['account_uuid']));
             
         return $response->withJson($account);
     }
@@ -37,40 +41,39 @@ class AccountController
     }
 
     public function post(Request $request, Response $response, array $args)
-    {
-        $accountUuid = $args['account_uuid'];
-            
-        if (!Uuid::isValid($accountUuid) || Uuid::fromString($accountUuid)->getVersion() != '4'){
-            throw new InvalidUuid('Invalid user UUID', 400);
-        }
-
+    {   
         $input = $request->getParsedBody();
-
-        if (gettype($input['interval']) !== 'array' || sizeOf($input['interval']) === 0){
-            throw new InvalidUserInput('The time interval cannot be empty');
+        
+        if ($input['type'] != '0' && $input['type'] != '1'){
+            throw new InvalidUserInput('Type is required and must be 0 or 1', 400);
         }
-        else if (empty($input['available_date'])){
-            throw new InvalidUserInput('Invalid date', 400);
+        else if (empty($input['firstname']) || empty($input['lastname'])){
+            throw new InvalidUserInput('Firstname and lastname are required', 400);
         }
-
-        foreach($input['interval'] as $inputInterval){
-            $intervalObject = new Interval($inputInterval['start'], $inputInterval['end'], $intervalStep);
-            $date = new DateInFuture($inputInterval['available_date']);
-            
-            $accountData = $this->query->getAccount($accountUuid);
-            
-            if (empty($accountData)){
-
-            }
-
-            $sql = "INSERT INTO availability (account_uuid, available_date, interval) 
-                VALUES (:account_uuid, :available_date, :interval)";
-            $sth->execute(array(
-                'account_uuid' => $accountUuid, 
-                'available_date' => $availableDate, 
-                'interval' => $interval)
+        else if (empty($input['email'])){
+            throw new InvalidUserInput('Email is required', 400);
+        }
+        
+        if ($input['type'] === 1){
+            $account = new InterviewerAccount(
+                new Uuid($input['uuid']),
+                $input['firstname'],
+                $input['lastname'],
+                new EmailAddress($input['email'])
             );
-
         }
+        else{
+            $account = new CandidateAccount(
+                new Uuid(),
+                $input['firstname'],
+                $input['lastname'],
+                new EmailAddress($input['email'])
+            );
+        }
+
+        $this->query->addAccount($account);
+
+        return $response->withJson($account);
+        
     }
 }
