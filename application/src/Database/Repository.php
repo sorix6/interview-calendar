@@ -21,6 +21,13 @@ class Repository
         $this->db = $db;
     }
 
+    /**
+     * Get a single account by Uuid
+     * 
+     * @param Uuid $uuid
+     * 
+     * @return AccountInterface
+     */
     public function getAccount(Uuid $uuid): AccountInterface
     {
         $sth = $this->db->prepare("SELECT * FROM account where uuid = ?");
@@ -34,7 +41,10 @@ class Repository
         return $this->getAvailabilityOfAccount($this->toAccountObject($account));
     }
 
-    public function getAccounts()
+    /**
+     * Get the complete list of accounts
+     */
+    public function getAccounts(): array
     {
         $sth = $this->db->prepare("SELECT * FROM account");
         $sth->execute();
@@ -49,6 +59,12 @@ class Repository
         return $accountsArray;
     }
 
+    /**
+     * Add a new account
+     * 
+     * @param AccountInterface $account
+     * 
+     */
     public function addAccount(AccountInterface $account)
     {
         $sth = $this->db->prepare("INSERT INTO account (uuid, firstname, lastname, email, type)
@@ -58,6 +74,13 @@ class Repository
        
     }
     
+    /**
+     * Get the list of availabilities starting from a string uuid
+     * 
+     * @param string $uuid
+     * 
+     * @return AccountInterface
+     */
     public function getAvailabilitiesByAccountUuid(string $uuid): AccountInterface
     {
         $account = $this->getAccount(new Uuid($uuid));
@@ -65,6 +88,13 @@ class Repository
         return $this->getAvailabilityOfAccount($account);
     }
 
+    /**
+     * Get the complete availability of an account
+     * 
+     * @param AccountInterface $account
+     * 
+     * @return AccountInterface
+     */
     public function getAvailabilityOfAccount(AccountInterface $account): AccountInterface
     {
         $sth = $this->db->prepare(
@@ -90,7 +120,14 @@ class Repository
         return $account;
     }
 
-    public function getAvailabilityOfAccounts(array $accountUuids)
+    /**
+     * Get the common availability of multiple accounts
+     * 
+     * @param array $accountUuids
+     * 
+     * @return array
+     */
+    public function getAvailabilityOfAccounts(array $accountUuids): array
     {
         $accountsUuidString = "'" . implode("','", $accountUuids) . "'";
         
@@ -107,6 +144,7 @@ class Repository
         $sth->execute();
         $availabilities = $sth->fetchAll();
         
+        // instantiate account objects with atatched availabilities
         $accounts = [];
         foreach($availabilities as $availabilityRecord){
             if (!array_key_exists($availabilityRecord['uuid'], $accounts)){
@@ -129,19 +167,26 @@ class Repository
             
         }
         
+        // parse the ranges of availability for each date and remove elements that are 
+        // not in common between accounts
         $availabilityRanges = [];
         $counter = 0;
         foreach($accounts as $account){
             $accountDates = [];
             foreach($account->getAvailabilities() as $availability){
-                
+                // get the range equivalent of the availability intervals for the given date
                 $range = $availability->range();
+
+                // during the first passing, we use the availabilities of the first account to 
+                // instantiate the array holding the common availabilities
                 if ($counter === 0){
                     $availabilityRanges[$range['date']] = $range['range'];
                 }
                 else{
+                    // for the other accounts, if a date is present both in account and in common list
+                    // update the range for the given date with the result of their intersection
                     $date = (string) $availability->date();
-                    $accountDates[$date] = 1;
+                    $accountDates[$date] = 1; // save a record of the 
                     if (array_key_exists($date, $availabilityRanges)){
                         $availabilityRanges[$date] = array_intersect(
                             $range['range'], 
@@ -156,7 +201,9 @@ class Repository
             }
 
             if ($counter > 0){
-                $availabilityRanges = array_intersect_key($availabilityRanges, $accountDates); 
+                // for all other account except the first one
+                // remove from the common list all dates that are not available for the current account
+                $availabilityRanges = array_intersect_key($availabilityRanges, $account->getAvailableDates()); 
             }
             
             $counter++;
@@ -165,7 +212,13 @@ class Repository
         return $availabilityRanges;
     }
     
-
+    /**
+     * Add a single availability for an account
+     * 
+     * @param AccountInterface $account
+     * @param Availability $availability
+     * @param Interval $interval
+     */
     public function addAvailability(AccountInterface $account, Availability $availability, Interval $interval)
     {
        
@@ -181,6 +234,14 @@ class Repository
 
     }
 
+    /**
+     * Add multiple intervals of availability for the same day for an account
+     * 
+     * @param AccountInterface $account
+     * @param array $intervals
+     * 
+     * @return AccountInterface
+     */
     public function setAvailabilities(AccountInterface $account, array $intervals): AccountInterface
     {
         
@@ -217,6 +278,11 @@ class Repository
         }
 
     }
+
+    /**
+     * ------TOOLS-------------------
+     */
+
 
     private function toAccountObject(array $account): AccountInterface
     {

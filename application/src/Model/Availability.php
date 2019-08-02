@@ -40,6 +40,11 @@ class Availability implements \JsonSerializable
         return $this->interval->end();
     }
 
+    public function getIntervals(): array
+    {
+        return $this->intervals;
+    }
+
     public function range(): array
     {
         $range = [];

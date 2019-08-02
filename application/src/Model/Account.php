@@ -35,6 +35,16 @@ class Account implements AccountInterface, \JsonSerializable
         return $this->availabilities;
     }
 
+    public function getAvailableDates(): array
+    {
+        $dates = [];
+        foreach($this->availabilities as $availability){
+            $dates[(string) $availability->date()] = sizeOf($availability->getIntervals());
+        }
+
+        return $dates;
+    }
+
     public function setAvailabilities(array $availabilities)
     {
         $this->availabilities = $availabilities;
