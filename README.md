@@ -46,7 +46,7 @@ To run the application:
     The first time you run this command, the process might be slow as the images required will need to be downloaded on your computer. Once the build is done, you can start using the app.
 
     The application will be locally available at 127.0.0.1.
-    The Adminer instance is available at 127.0.0.1:8080. The connexion details can be found in the file ```src/config/settings.php```
+    The Adminer instance is available at 127.0.0.1:8080. The connexion details can be found in the file ```application/src/config/settings.php```
 
 2. Without Docker
     * Your machine will need:
@@ -54,7 +54,7 @@ To run the application:
         * PHP7.2
         * Composer
         * A PostgreSQL database 
-            * You will need to configure the database connexion in the application with your connexion information in ```src/config/settings.php```
+            * You will need to configure the database connexion in the application with your connexion information in ```application/src/config/settings.php```
             
             * You will also need to run the scripts from the file ```docker-config/postgres/init.sql``` to setup the necessary tables
 
