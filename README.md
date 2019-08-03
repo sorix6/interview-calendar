@@ -55,6 +55,8 @@ To run the application:
         * Composer
         * A PostgreSQL database 
             * You will need to configure the database connexion in the application with your connexion information in ```src/config/settings.php```
+            
+            * You will also need to run the scripts from the file ```docker-config/postgres/init.sql``` to setup the necessary tables
 
 
 
@@ -79,9 +81,9 @@ The following end-points are available:
     ```Method: POST```
     ``` Payload
         {
-            "type":1
-            "firstname":"jessie"
-            "lastname":"Jon"
+            "type":1,
+            "firstname":"jessie",
+            "lastname":"Jon",
             "email":"jjon@yahoo.com"
         }
     ```
@@ -96,13 +98,13 @@ The following end-points are available:
     ``` Payload
         [
             {
-                "date":"12-09-2019"
-                "start":"9"
-                "end":"12"
+                "date":"12-09-2019",
+                "start":"9",
+                "end":"12",
             },
             {
-                "date":"12-09-2019"
-                "start":"13"
+                "date":"12-09-2019",
+                "start":"13",
                 "end":"17"
             }
         ]

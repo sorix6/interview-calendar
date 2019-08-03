@@ -62,15 +62,31 @@ class Repository
     /**
      * Add a new account
      * 
+     * @param array $input
+     * 
+     */
+    public function addAccount(array $input)
+    {
+        $account = $this->toAccountObject($input);
+
+        return $this->saveAccount($account);
+       
+    }
+
+    /**
+     * Add a new account
+     * 
      * @param AccountInterface $account
      * 
      */
-    public function addAccount(AccountInterface $account)
+    public function saveAccount(AccountInterface $account)
     {
         $sth = $this->db->prepare("INSERT INTO account (uuid, firstname, lastname, email, type)
                                    VALUES(:uuid, :firstname, :lastname, :email, :type)");
                                    
         $sth->execute($account->toArray());
+
+        return $account;
        
     }
     

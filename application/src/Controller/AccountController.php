@@ -43,7 +43,7 @@ class AccountController
     public function post(Request $request, Response $response, array $args)
     {   
         $input = $request->getParsedBody();
-        
+     
         if ($input['type'] != '0' && $input['type'] != '1'){
             throw new InvalidUserInput('Type is required and must be 0 or 1', 400);
         }
@@ -53,27 +53,10 @@ class AccountController
         else if (empty($input['email'])){
             throw new InvalidUserInput('Email is required', 400);
         }
-        
-        if ($input['type'] === 1){
-            $account = new InterviewerAccount(
-                new Uuid($input['uuid']),
-                $input['firstname'],
-                $input['lastname'],
-                new EmailAddress($input['email'])
-            );
-        }
-        else{
-            $account = new CandidateAccount(
-                new Uuid(),
-                $input['firstname'],
-                $input['lastname'],
-                new EmailAddress($input['email'])
-            );
-        }
 
-        $this->query->addAccount($account);
-
-        return $response->withJson($account);
+        return $response->withJson(
+            $this->query->addAccount($input)
+        );
         
     }
 }
