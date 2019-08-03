@@ -1,6 +1,14 @@
-## Interview Calendar application
+## [ Interview Calendar Project ]
 
 
+
+### OVERVIEW
+
+Being able to schedule meetings while taking into account the availability of all the people expected to attend is a neccesity in most of our day to day lives. For internal usage within companies, a series of tools exist to help with this requirement. When it comes to scheduling interviews, this actions are more challenging as the people involved do not usually belong to the same organizations and most likely do not have access to each other's calendars through various tools.
+
+### GOALS
+
+The purpose of this project is to create a simple web API that allows people to exchange their availabilities and find convenient time slots to schedule meetings.
 
 This application allows:
 
@@ -15,7 +23,7 @@ This application allows:
 * Get the common available time slots for a series of accounts
 
 
-### Technologies
+### TECHNOLOGIES
 
 This application is developed using PHP7.2 (with Slim) and data is persisted in a PostgreSQL database. 
 
@@ -50,7 +58,7 @@ To run the application:
 
 
 
-### Using the application
+### USING THE APPLICATION
 
 The following end-points are available:
 
@@ -120,7 +128,7 @@ The following end-points are available:
 
     It will return the time slots during which all accounts have availabilties. For this call, you will need a tool such as Postman.  
 
-### Further development
+### FURTHER DEVELOPMENT
 
 * The application does not, as of this time, support the suppression of either accounts or availabilities. 
 
