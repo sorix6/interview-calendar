@@ -20,7 +20,7 @@ This application allows:
 This application is developed using PHP7.2 (with Slim) and data is persisted in a PostgreSQL database. 
 
 
-The project can be run using Docker and the configuration files provided in the source code. The configuration sets up an Apache server, the PHP environment, an instance of Composer, a PostgreSQl database and an instance of Adminer (UI for database manipulation).
+The project can be run using Docker and the configuration files provided in the source code. The configuration sets up an Apache server, the PHP environment, an instance of Composer, a PostgreSQL database and an instance of Adminer (UI for database manipulation).
 
 To run the application:
 
@@ -42,6 +42,7 @@ To run the application:
 
 2. Without Docker
     * Your machine will need:
+        * Access to a server
         * PHP7.2
         * Composer
         * A PostgreSQL database 
@@ -53,19 +54,19 @@ To run the application:
 
 The following end-points are available:
 
-* /account
+* **/account**
 
     ```Method: GET```
 
     It will return the complete list of accounts. You can access this end-point using your browser.
 
-* /account/{uuid}
+* **/account/{uuid}**
 
     ```Method: GET```
 
     It will return the account identified by the UUID and its list of availabilities. You can access this end-point using your browser.
 
-* /account
+* **/account**
 
     ```Method: POST```
     ``` Payload
@@ -81,7 +82,7 @@ The following end-points are available:
 
     It will create a new account. For this call, you will need a tool such as Postman.
 
-* /account/uuid/{uuid}/availability
+* **/account/uuid/{uuid}/availability**
 
     ```Method: POST```
     ``` Payload
@@ -103,7 +104,7 @@ The following end-points are available:
 
     It will add the defined availabilities. For this call, you will need a tool such as Postman.  
 
-* /accounts/availability
+* **/accounts/availability**
 
     ```Method: POST```
     ``` Payload
