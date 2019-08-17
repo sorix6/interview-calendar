@@ -12,7 +12,7 @@ class Interval implements \JsonSerializable
 
     public function __construct(int $start, int $end, int $step = null)
     {
-        $this->validate($start, $end);
+        $this->validate($start, $end, $step);
 
         $this->start = $start;
         $this->end = $end;
@@ -22,14 +22,16 @@ class Interval implements \JsonSerializable
     private function validate(int $start, int $end, int $step = null)
     {
         if ($start < 0 || $start > 23){
-            throw new InvalidIntervalBorder('The start of the time interval must start between 0 and 23', 400);
+            throw new Exception\InvalidIntervalBorder('The start of the time interval must start between 0 and 23', 400);
         }
         else if ($end < 1 || $end > 24){
-            throw new InvalidIntervalBorder('The end of the time interval must start between 0 and 23', 400);
+            throw new Exception\InvalidIntervalBorder('The end of the time interval must start between 0 and 23', 400);
         }
-
-        if (!empty($step) && $step > ($end - $start)){
-            throw new InvalidIntervalStep('The step for the interval cannot be larger than the length  of the interval', 400);
+        else if ($end - $start < 1){
+            throw new Exception\InvalidIntervalBorder('The end of the time interval must start between 0 and 23', 400);
+        }
+        else if (!empty($step) && $step > ($end - $start)){
+            throw new Exception\InvalidIntervalStep('The step for the interval cannot be larger than the length  of the interval', 400);
         }
     }
 

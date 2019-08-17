@@ -25,7 +25,7 @@ class Uuid
     public function validate(string $value): RamseyUuid
     {
         if (!RamseyUuid::isValid($value) || RamseyUuid::fromString($value)->getVersion() != '4'){
-            throw new Exception\InvalidUuid('Invalid user UUID', 400);
+            throw new Exception\InvalidUuid('Invalid UUID', 400);
         }
 
         return RamseyUuid::fromString($value);
