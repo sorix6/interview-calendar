@@ -1,2 +1,3 @@
 application/vendor
-application/tests/reports
+application/tests/report
+application/.phpunit.result.cache
