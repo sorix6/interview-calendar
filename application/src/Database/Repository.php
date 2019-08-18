@@ -35,7 +35,7 @@ class Repository
         $account = $sth->fetch();
 
         if (empty($account)){
-            throw Exception\InvalidAccount('Account not found', 404);
+            throw new Exception\InvalidAccount('Account not found', 404);
         }
 
         return $this->getAvailabilityOfAccount($this->toAccountObject($account));

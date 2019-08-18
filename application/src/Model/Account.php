@@ -39,7 +39,7 @@ class Account implements AccountInterface, \JsonSerializable
     {
         $dates = [];
         foreach($this->availabilities as $availability){
-            $dates[(string) $availability->date()] = sizeOf($availability->getIntervals());
+            $dates[(string) $availability->date()] = sizeOf($availability->intervals());
         }
 
         return $dates;
@@ -47,7 +47,20 @@ class Account implements AccountInterface, \JsonSerializable
 
     public function setAvailabilities(array $availabilities)
     {
-        $this->availabilities = $availabilities;
+        foreach ($availabilities as $availability)
+        {
+            $this->addAvailability($availability);
+        }
+        
+    }
+
+    public function resetAvailabilities(array $availabilities = null)
+    {
+        $this->availabilities = [];
+        
+        if (!empty($availabilities)) {
+            $this->setAvailabilities($availabilities);
+        }
     }
 
     public function uuid(): Uuid

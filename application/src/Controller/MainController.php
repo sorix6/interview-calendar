@@ -10,7 +10,7 @@
 
     return function (App $app) {
         
-        $app->post('/accounts/availability', 'InterviewCalendar\Controller\AvailabilityController:getAll');
+        $app->post('/accounts/availability', 'InterviewCalendar\Controller\AvailabilityController:getMultiple');
         
         $app->post('/account/{account_uuid}/availability', 'InterviewCalendar\Controller\AvailabilityController:post');
 

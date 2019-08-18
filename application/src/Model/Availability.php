@@ -2,7 +2,6 @@
 
 namespace InterviewCalendar\Model;
 
-use InterviewCalendar\Model\AccountInterface;
 use InterviewCalendar\ValueObject\DateInFuture;
 use InterviewCalendar\ValueObject\Interval;
 
@@ -30,17 +29,7 @@ class Availability implements \JsonSerializable
         return (string) $this->date;
     }
 
-    public function intervalStart(): int
-    {
-        return $this->interval->start();
-    }
-
-    public function intervalEnd(): int
-    {
-        return $this->interval->end();
-    }
-
-    public function getIntervals(): array
+    public function intervals(): array
     {
         return $this->intervals;
     }
@@ -52,6 +41,9 @@ class Availability implements \JsonSerializable
         {
             $range = array_merge($range, $interval->range());
         }
+
+        $range = array_unique($range);
+        sort($range);
 
         return [ 'date' => (string) $this->date, 'range' => $range ];
     }
