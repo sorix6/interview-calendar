@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit 
+        bootstrap="tests/config/bootstrap.php"
+        backupGlobals="true"
+        backupStaticAttributes="false"
+        verbose="false"
+        colors="false"
+        convertErrorsToExceptions="true"
+        convertNoticesToExceptions="true"
+        convertWarningsToExceptions="true"
+        processIsolation="false"
+        stopOnFailure="false">
+    
+    <testsuites>
+        <testsuite name="InterviewCalendar_IntegrationTests">
+            <directory>./tests/Controller</directory>
+            <directory>./tests/Database</directory>
+        </testsuite>
+    </testsuites>
+
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="false">
+            <directory suffix=".php">./src/Controller</directory>
+            <directory suffix=".php">./src/Database</directory>
+        </whitelist>
+    </filter>
+
+    <logging>
+        <log type="coverage-html" target="./tests/report-integration" lowUpperBound="35"
+            highLowerBound="70"/>
+        <log type="coverage-clover" target="./tests/report-integration/coverage.xml"/>
+        <log type="coverage-php" target="./tests/report-integration/coverage.serialized"/>
+        <log type="coverage-text" target="php://stdout" showUncoveredFiles="false"/>
+        <log type="junit" target="./tests/report-integration/logfile.xml" />
+        <log type="testdox-html" target="./tests/report-integration/testdox.html"/>
+        <log type="testdox-text" target="./tests/report-integration/testdox.txt"/>
+    </logging>
+
+</phpunit>

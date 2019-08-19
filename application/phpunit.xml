@@ -9,9 +9,14 @@
          convertWarningsToExceptions="true"
          processIsolation="false"
          stopOnFailure="false">
-    <testsuite name="Interview Calendar - Testsuite">
-        <directory>./tests</directory>
-    </testsuite>
+    
+    <testsuites>
+        <testsuite name="InterviewCalendar_UnitTests">
+            <directory>./tests</directory>
+            <exclude>./tests/Controller</exclude>
+            <exclude>./tests/Database</exclude>
+        </testsuite>
+    </testsuites>
 
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="false">
