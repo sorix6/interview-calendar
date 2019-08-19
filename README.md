@@ -136,7 +136,7 @@ The following end-points are available:
 
 * No authentication or authorization systems have been implemented. Separate account configuration for different types of account should be available.
 
-* No unit tests have been yet added.
+* Unit tests coverage is not complete.
 
 * Some parts of the code need refactoring to improve performance and the model.
 
