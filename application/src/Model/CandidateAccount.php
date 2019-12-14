@@ -7,4 +7,14 @@ use Ramsey\Uuid\Uuid;
 class CandidateAccount extends Account
 {
 
+    public function toArray(): array
+    {
+        return [
+            'uuid'      => (string) $this->uuid,
+            'firstname' => $this->firstname,
+            'lastname'  => $this->lastname,
+            'email'     => (string) $this->email,
+            'type'      => 0
+        ];
+    }
 }

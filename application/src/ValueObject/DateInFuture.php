@@ -16,8 +16,8 @@ class DateInFuture
 
     private function validate(string $date)
     {
-        $dateObject = new DateTime($date);
-        $currentDate = new DateTime;
+        $dateObject = new \DateTime($date);
+        $currentDate = new \DateTime;
 
         if ($dateObject < $currentDate){
             throw InvalidDate('The date cannot be in the past', 400);
@@ -26,7 +26,7 @@ class DateInFuture
         return $dateObject;
     }
 
-    public function value(): DateTime 
+    public function value(): \DateTime 
     {
         return $this->value;
     }

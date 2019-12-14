@@ -4,8 +4,7 @@ namespace InterviewCalendar\Model;
 
 use InterviewCalendar\ValueObject\Exception;
 use InterviewCalendar\ValueObject\EmailAddress;
-
-use Ramsey\Uuid\Uuid;
+use InterviewCalendar\ValueObject\Uuid;
 
 interface AccountInterface
 {

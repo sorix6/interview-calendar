@@ -4,7 +4,7 @@ namespace InterviewCalendar\ValueObject;
 
 use InterviewCalendar\ValueObject\Exception;
 
-class Interval 
+class Interval implements \JsonSerializable
 {
     private $start;
     private $end;
@@ -12,7 +12,7 @@ class Interval
 
     public function __construct(int $start, int $end, int $step = null)
     {
-        $this->validate($start, $end);
+        $this->validate($start, $end, $step);
 
         $this->start = $start;
         $this->end = $end;
@@ -22,14 +22,16 @@ class Interval
     private function validate(int $start, int $end, int $step = null)
     {
         if ($start < 0 || $start > 23){
-            throw new InvalidIntervalBorder('The start of the time interval must start between 0 and 23', 400);
+            throw new Exception\InvalidIntervalBorder('The start of the time interval must start between 0 and 23', 400);
         }
         else if ($end < 1 || $end > 24){
-            throw new InvalidIntervalBorder('The end of the time interval must start between 0 and 23', 400);
+            throw new Exception\InvalidIntervalBorder('The end of the time interval must start between 0 and 23', 400);
         }
-
-        if (!empty($step) && $step > ($end - $start)){
-            throw new InvalidIntervalStep('The step for the interval cannot be larger than the length  of the interval', 400);
+        else if ($end - $start < 1){
+            throw new Exception\InvalidIntervalBorder('The end of the time interval must start between 0 and 23', 400);
+        }
+        else if (!empty($step) && $step > ($end - $start)){
+            throw new Exception\InvalidIntervalStep('The step for the interval cannot be larger than the length  of the interval', 400);
         }
     }
 
@@ -43,16 +45,23 @@ class Interval
         return $this->end;
     }
 
+    public function intersect(Interval $interval): array
+    {
+        return array_intersect($this->range(), $interval->range());
+    }
+
     public function range(): array
     {
-        $range = array();
-        $counter = $this->start;
-        while ($counter <= $this->end){
-            array_push($range, $counter);
+        return range($this->start, $this->end - 1, $this->step);
+    }
 
-            $counter += $this->step;
-        }
+    public function __toString(): string 
+    {
+        return '[' . $this->start() . ',' . $this->end() . ')';
+    }
 
-        return $range
+    public function jsonSerialize(): string
+    {
+        return $this->start() . ' - ' . $this->end();
     }
 }

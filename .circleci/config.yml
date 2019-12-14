@@ -1,0 +1,78 @@
+# PHP CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-php/ for more details
+#
+version: 2
+jobs:
+  build:
+    docker:
+      # Specify the version you desire here
+      - image: php:7.2-apache
+      - image: postgres:latest
+        container_name: postgres
+        environment:
+          POSTGRES_PASSWORD: password
+          POSTGRES_USER: admin
+        ports:
+          - 5432:5432
+
+    steps:
+      - checkout
+
+      - run: 
+          name: install dependencies
+          command: >
+            apt-get update && apt-get install -y nano libfreetype6-dev libjpeg62-turbo-dev libxml2-dev exim4
+            libmcrypt-dev libyaml-dev libpq-dev git parallel zlib1g-dev
+            libssl-dev libpcre3 libpcre3-dev memcached
+            && docker-php-ext-install pdo pdo_pgsql opcache soap
+            && apt-get update && apt-get install -y libmemcached-dev zlib1g-dev
+            && docker-php-ext-install zip
+      
+      - run: 
+          name: server settings
+          command: >
+            a2enmod rewrite
+            && service apache2 restart
+
+      - run:
+          name: install composer
+          command: >
+            curl -sS https://getcomposer.org/installer | php 
+            && mv composer.phar /usr/local/bin/composer 
+            && composer global require hirak/prestissimo --no-plugins --no-scripts
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+            # "composer.lock" can be used if it is committed to the repo
+            - v2-dependencies-{{ checksum "application/composer.json" }}
+            # fallback to using the latest cache if no exact match is found
+            - v2-dependencies-
+
+      - run: 
+          name: composer install
+          command: cd application && composer install -n --prefer-dist
+
+      - save_cache:
+          key: v2-dependencies-{{ checksum "application/composer.json" }}
+          paths:
+            - ./vendor
+      - run:
+          name: update host file
+          command: echo 127.0.0.1 postgres | tee -a /etc/hosts
+
+      - run:
+          name: unit tests
+          command: cd ~/project/application && vendor/bin/phpunit
+      
+      - run:
+          name: integration tests
+          command: cd ~/project/application && vendor/bin/phpunit --configuration phpunit-test.xml
+
+      - run: 
+          name: linting
+          command: cd ~/project/application && vendor/bin/phplint ./ --exclude=vendor
+
+
+      

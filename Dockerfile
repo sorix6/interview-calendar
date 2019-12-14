@@ -27,6 +27,7 @@ RUN docker-php-ext-install zip
 RUN curl -sS https://getcomposer.org/installer | php \
     && mv composer.phar /usr/local/bin/composer \
     && composer global require hirak/prestissimo --no-plugins --no-scripts
+    && composer require overtrue/phplint --dev -vvv
 
 COPY application/composer.json composer.json
 COPY application/composer.lock composer.lock

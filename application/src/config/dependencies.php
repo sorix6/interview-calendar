@@ -29,4 +29,5 @@ return function (App $app) {
     $container['InterviewCalendar\Controller\AccountController'] = function ($c) {
         return new \InterviewCalendar\Controller\AccountController($c['db'], $c['parameters']['intervalStep']);
     };
+
 };

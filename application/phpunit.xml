@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit 
+         backupGlobals="true"
+         backupStaticAttributes="false"
+         verbose="false"
+         colors="false"
+         convertErrorsToExceptions="true"
+         convertNoticesToExceptions="true"
+         convertWarningsToExceptions="true"
+         processIsolation="false"
+         stopOnFailure="false">
+    
+    <testsuites>
+        <testsuite name="InterviewCalendar_UnitTests">
+            <directory>./tests</directory>
+            <exclude>./tests/Controller</exclude>
+            <exclude>./tests/Database</exclude>
+        </testsuite>
+    </testsuites>
+
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="false">
+            <directory suffix=".php">./src</directory>
+            <exclude>
+                <directory suffix=".*">./tests</directory>
+            </exclude>
+        </whitelist>
+    </filter>
+
+    <logging>
+        <log type="coverage-html" target="./tests/report" lowUpperBound="35"
+            highLowerBound="70"/>
+        <log type="coverage-clover" target="./tests/report/coverage.xml"/>
+        <log type="coverage-php" target="./tests/report/coverage.serialized"/>
+        <log type="coverage-text" target="php://stdout" showUncoveredFiles="false"/>
+        <log type="junit" target="./tests/report/logfile.xml" />
+        <log type="testdox-html" target="./tests/report/testdox.html"/>
+        <log type="testdox-text" target="./tests/report/testdox.txt"/>
+    </logging>
+
+</phpunit>
